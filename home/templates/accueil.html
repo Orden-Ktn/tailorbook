@@ -1,0 +1,64 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TailorBook - Votre atelier numérique</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="shortcut icon" href="/static/images/favicon/logo.png">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+     <link rel="stylesheet" href="/static/css/home.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Crimson+Text:wght@400;600&display=swap" rel="stylesheet">
+  
+</head>
+<body>
+    <div class="background-pattern"></div>
+    <div class="stitch-line stitch-top"></div>
+    <div class="stitch-line stitch-bottom"></div>
+
+    <div class="container">
+        <header>
+            <div class="logo">
+                <img class="logo-icon gallery-item" src="/static/images/logo.png" alt="">
+                <h1>TailorBook</h1>
+            </div>
+        </header>
+
+        <main class="hero">
+            <h2>L'atelier numérique</h2>
+            <p>Gérez vos clients et les commandes avec élégance. TailorBook transforme votre métier artisanal en expérience digitale fluide.</p>
+
+            <div class="features">
+                <div class="feature">
+                    <div class="feature-icon">👥</div>
+                    <h3>Clients</h3>
+                    <p>Centralisez vos clients et leur historique en un seul endroit</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">📏</div>
+                    <h3>Mesures</h3>
+                    <p>Stockez et retrouvez les mensurations de vos clients instantanément</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">📋</div>
+                    <h3>Commandes</h3>
+                    <p>Gérez chaque projet de la prise de mesure à la livraison</p>
+                </div>
+            </div>
+
+            <div class="cta-group">
+                <a href="{% url 'register' %}" class="btn btn-primary">
+                    <span>S'inscrire</span>
+                </a>
+                <a href="{% url 'login' %}" class="btn btn-primary" style="background-color: green;">
+                    <span>Se connecter</span>
+                </a>
+            </div>
+        </main>
+      
+    </div>
+
+    <script src="/static/js/home.js"></script>
+</body>
+</html>

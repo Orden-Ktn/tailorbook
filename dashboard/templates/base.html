@@ -1,0 +1,188 @@
+{% load form_tags %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TailorBook - Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="{% static 'css/dash.css' %}">
+    <link rel="icon" type="image/png" href="{% static 'images/favicon/logo.png' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+    
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="logo-section">
+            <div class="logo-content">
+                <img class="logo-icon" src="{% static 'images/logo.png' %}" alt="">
+                <span class="logo-text">TailorBook</span>
+            </div>
+        </div>
+
+        <nav class="nav-menu">
+            <div class="nav-item">
+                <a href="{% url 'dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" data-page="dashboard">
+                    <i class="ri-dashboard-line nav-icon"></i>
+                    <span>Tableau de bord</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="{% url 'client' %}" class="nav-link {% if request.resolver_match.url_name == 'client' %}active{% endif %}" data-page="clients">
+                    <i class="ri-user-line nav-icon"></i>
+                    <span>Clientèle</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="{% url 'commande' %}" class="nav-link {% if request.resolver_match.url_name == 'commande' %}active{% endif %}" data-page="commandes">
+                    <i class="ri-shopping-bag-line nav-icon"></i>
+                    <span>Commande</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="{% url 'mesures_femmes' %}" class="nav-link {% if request.resolver_match.url_name == 'mesures_femmes' %}active{% endif %}" data-page="mesures_femmes">
+                    <i class="ri-ruler-line nav-icon"></i>
+                    <span>Mesures Femmes</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="{% url 'mesures_hommes' %}" class="nav-link {% if request.resolver_match.url_name == 'mesures_hommes' %}active{% endif %}" data-page="mesures_hommes">
+                    <i class="ri-ruler-line nav-icon"></i>
+                    <span>Mesures Hommes</span>
+                </a>
+            </div>
+        </nav>
+
+        <div class="user-section">
+            <div class="user-info">
+                <div class="user-avatar">
+                    <img class="avatar-icon" src="{% static 'images/user.png' %}" alt="">
+                </div>
+                <div class="user-details">
+                    <div class="user-name">{{ request.user.profile.nom_atelier }}</div>
+                    <div class="user-role">{{ request.user.profile.adresse }}</div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+        
+        <!-- Top Bar -->
+        <div class="topbar">
+            <div class="topbar-left">
+                <button class="menu-toggle" id="menuToggle">
+                    <i class="ri-menu-line"></i>
+                </button>
+                <!-- <h1 class="page-title" id="pageTitle">Dashboard</h1> -->
+            </div>
+            
+            <div class="topbar-right">
+                <!-- <div class="search-bar">
+                    <i class="ri-search-line search-icon"></i>
+                    <input type="text" class="search-input" placeholder="Rechercher...">
+                </div> -->
+                
+                <button class="notification-btn" onclick="openModalLogout()" title="Déconnexion">
+                    <i class="ri-logout-box-line"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="content" id="content">
+            {% if messages %}
+                <div class="alert-container">
+                    {% for message in messages %}
+                        <div class="alert {{ message.tags }}">
+                            <button class="alert-close" onclick="this.parentElement.classList.add('hiding'); setTimeout(() => this.parentElement.remove(), 400);">
+                                <i class="ri-close-line"></i>
+                            </button>
+                            <h4 class="alert-title">
+                                <i class="ri-information-line"></i> TailorBook
+                            </h4>
+                            <div class="alert-message">{{ message }}</div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% block content %}
+
+            {% endblock %}
+        </div>
+    </main>
+
+    <div class="modal-overlay" id="modalLogout">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Déconnexion</h3>
+                <button class="modal-close" onclick="closeModalLogout()">
+                    <i class="ri-close-line"></i>
+                </button>
+            </div>
+            
+            <form id="">
+                <div class="modal-body" style="grid-template-columns: repeat(1, 1fr);">
+                    Êtes-vous sûr de vouloir vous déconnecter ?
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn-modal btn-modal-cancel" onclick="closeModalLogout()">
+                        Non
+                    </button>
+                    <a href="{% url 'deconnexion' %}" type="button" class="btn-modal btn-modal-submit" style="text-decoration: none; text-align: center;">
+                        Oui
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="/static/js/dash.js"></script>
+    <script>
+        // Auto-fermeture des alertes après 5 secondes
+        document.addEventListener('DOMContentLoaded', function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                setTimeout(() => {
+                    alert.classList.add('hiding');
+                    setTimeout(() => {
+                        alert.remove();
+                    }, 400);
+                }, 5000);
+            });
+        });
+
+        // Menu Toggle
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const mainContent = document.getElementById('mainContent');
+
+        menuToggle.addEventListener('click', () => {
+            if (window.innerWidth > 768) {
+                sidebar.classList.toggle('collapsed');
+                mainContent.classList.toggle('expanded');
+            } else {
+                sidebar.classList.toggle('open');
+            }
+        });
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth <= 768) {
+                if (!sidebar.contains(e.target) && !menuToggle.contains(e.target)) {
+                    sidebar.classList.remove('open');
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <!-- Dashboard View -->
+    <div class="page-content" id="dashboard-content">
+        <div class="stats-grid">
+            <div class="stat-card" style="background-color: rgb(255, 255, 255);">
+                <div class="stat-header">
+                    <div class="stat-icon">👥</div>
+                    <!-- <div class="stat-trend up">
+                        <i class="ri-arrow-up-line"></i>
+                        <span>12%</span>
+                    </div> -->
+                </div>
+                <div class="stat-value">{{ total_client }}</div>
+                <div class="stat-label">Clients</div>
+            </div>
+
+            <div class="stat-card" style="background-color: rgb(255, 255, 255);">
+                <div class="stat-header">
+                    <div class="stat-icon">📋</div>
+                    <!-- <div class="stat-trend up">
+                        <i class="ri-arrow-up-line"></i>
+                        <span>8%</span>
+                    </div> -->
+                </div>
+                <div class="stat-value">{{ total_commande_recue }}</div>
+                <div class="stat-label">Commandes reçues</div>
+            </div>
+
+            <div class="stat-card" style="background-color: rgb(255, 255, 255);">
+                <div class="stat-header">
+                    <div class="stat-icon">✅</div>
+                    <!-- <div class="stat-trend up">
+                        <i class="ri-arrow-up-line"></i>
+                        <span>15%</span>
+                    </div> -->
+                </div>
+                <div class="stat-value">{{ total_commande_livree }}</div>
+                <div class="stat-label">Commandes livrées</div>
+            </div>
+
+            <div class="stat-card" style="background-color: rgb(255, 255, 255);">
+                <div class="stat-header">
+                    <div class="stat-icon">💰</div>
+                    <!-- <div class="stat-trend down">
+                        <i class="ri-arrow-down-line"></i>
+                        <span>3%</span>
+                    </div> -->
+                </div>
+                <div class="stat-value">{{ total_revenus }}</div>
+                <div class="stat-label">Revenus</div>
+            </div>
+        </div>
+        <!-- <div class="main">
+          
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Commandes récentes</h3>
+                    <button class="card-action">Voir tout</button>
+                </div>
+                
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Client</th>
+                                <th>Article</th>
+                                <th>Date</th>
+                                <th>Statut</th>
+                                <th>Montant</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Marie Dubois</td>
+                                <td>Costume sur mesure</td>
+                                <td>12 Fév 2026</td>
+                                <td><span class="status-badge warning">En cours</span></td>
+                                <td>850€</td>
+                            </tr>
+                            <tr>
+                                <td>Pierre Martin</td>
+                                <td>Pantalon ajusté</td>
+                                <td>11 Fév 2026</td>
+                                <td><span class="status-badge info">Mesures prises</span></td>
+                                <td>220€</td>
+                            </tr>
+                            <tr>
+                                <td>Sophie Laurent</td>
+                                <td>Robe de soirée</td>
+                                <td>10 Fév 2026</td>
+                                <td><span class="status-badge success">Terminée</span></td>
+                                <td>1,200€</td>
+                            </tr>
+                            <tr>
+                                <td>Luc Bernard</td>
+                                <td>Veste blazer</td>
+                                <td>09 Fév 2026</td>
+                                <td><span class="status-badge warning">En cours</span></td>
+                                <td>450€</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Activités récentes</h3>
+                </div>
+                
+                <div class="activity-list">
+                    <div class="activity-item">
+                        <div class="activity-icon" style="background: #dcfce7; color: #166534;">
+                            <i class="ri-user-add-line"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">Nouveau client ajouté</div>
+                            <div class="activity-time">Il y a 2 heures</div>
+                        </div>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="activity-icon" style="background: #fef3c7; color: #92400e;">
+                            <i class="ri-shopping-bag-line"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">Commande #1847 mise à jour</div>
+                            <div class="activity-time">Il y a 4 heures</div>
+                        </div>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="activity-icon" style="background: #dbeafe; color: #1e40af;">
+                            <i class="ri-ruler-line"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">Mesures enregistrées</div>
+                            <div class="activity-time">Il y a 6 heures</div>
+                        </div>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="activity-icon" style="background: #dcfce7; color: #166534;">
+                            <i class="ri-check-line"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">Commande #1845 livrée</div>
+                            <div class="activity-time">Il y a 1 jour</div>
+                        </div>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="activity-icon" style="background: #fee2e2; color: #991b1b;">
+                            <i class="ri-error-warning-line"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">Retard sur commande #1842</div>
+                            <div class="activity-time">Il y a 1 jour</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+    </div>
+
+    
+{% endblock %}

@@ -1,0 +1,295 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <!-- Dashboard View -->
+    <div class="page-content" style="animation: fadeInUp 0.6s ease;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; margin-top: -1rem;">
+            <div>
+                <h2 style="font-family: 'Cormorant Garamond', serif; font-size: 2rem; margin-bottom: 0.5rem;">Mesures Hommes</h2>
+                <!-- <p style="color: var(--slate);">248 clients au total</p> -->
+            </div>
+            <button class="card-action" style="padding: 0.75rem 1.5rem; background-color: #59c85a; color: white;" onclick="openModalAddMesureHomme()">
+                Ajouter
+            </button>
+        </div>
+        <div class="card">
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>N°</th>
+                            <th>Client(e)</th>
+                            <th>Contact</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for m in mesures %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ m.client.nom_prenom }}</td>
+                                <td>{{ m.client.telephone }}</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="action-btn btn-view" title="Voir" 
+                                            onclick="openModalMesureHomme('modal-{{ m.id }}')">
+                                            <i class="ri-eye-line"></i>
+                                        </button>
+                                        <button class="action-btn btn-edit" title="Modifier"
+                                            onclick="openModalEditMesureHomme(
+                                                '{{ m.id }}',
+                                                '{{ m.client.id }}',
+                                                '{{ m.epaule_dos|escapejs }}',
+                                                '{{ m.tour_poitrine|escapejs }}',
+                                                '{{ m.tour_manche|escapejs }}',
+                                                '{{ m.longueur_manche|escapejs }}',
+                                                '{{ m.longueur_bohumba|escapejs }}',
+                                                '{{ m.tour_cou|escapejs }}',
+                                                '{{ m.longueur_chemise|escapejs }}',
+                                                '{{ m.ceinture|escapejs }}',
+                                                '{{ m.tour_hanche|escapejs }}',
+                                                '{{ m.longueur_pantalon|escapejs }}',
+                                                '{{ m.longueur_genou|escapejs }}',
+                                                '{{ m.tour_genou|escapejs }}',
+                                                '{{ m.tour_bas|escapejs }}',
+                                                '{{ m.tour_cuisse|escapejs }}',
+                                                '{{ m.longueur_culotte|escapejs }}',
+                                                '{{ m.longueur_gilet|escapejs }}',
+                                                '{{ m.longueur_veste|escapejs }}'
+                                            )">
+                                            <i class="ri-edit-line"></i>
+                                        </button>
+                                        <button class="action-btn btn-delete" title="Supprimer"
+                                            onclick="openModalDeleteMesureHomme('{{ m.id }}', '{{ m.nom_prenom|escapejs }}')">
+                                            <i class="ri-delete-bin-line"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                        {% empty %}
+                            <tr>
+                                <td colspan="21" style="text-align:center; color:red;">Aucune mesure trouvée</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                {% for m in mesures %}
+                    <div class="modal-overlay" id="modal-{{ m.id }}" style="display:none;">
+                        <div class="modal">
+                            <div class="modal-header">
+                                <h3 class="modal-title">Mesure — {{ m.client.nom_prenom }}</h3>
+                                <button type="button" class="modal-close" onclick="closeModalMesureHomme('modal-{{ m.id }}')">
+                                    <i class="ri-close-line"></i>
+                                </button>
+                            </div>
+
+                           <div class="modal-body" style="margin-top: -3%;">
+                                <div class="form-field"><label>Épaule dos</label><input type="text" value="{{ m.epaule_dos|default_if_none:'-' }}" readonly></div>
+                                <div class="form-field"><label>Tour poitrine</label><input type="text" value="{{ m.tour_poitrine|default_if_none:'-' }}" readonly></div>
+                                <div class="form-field"><label>Tour manche</label><input type="text" value="{{ m.tour_manche|default_if_none:'-' }}" readonly></div>
+                                <div class="form-field"><label>Longueur manche</label><input type="text" value="{{ m.longueur_manche|default_if_none:'-' }}" readonly></div>
+                                <div class="form-field"><label>Longueur bohumba</label><input type="text" value="{{ m.longueur_bohumba|default_if_none:'-' }}" readonly></div>
+                                <div class="form-field"><label>Tour cou</label><input type="text" value="{{ m.tour_cou|default_if_none:'-' }}" readonly></div>
+                                <div class="form-field"><label>Longueur chemise</label><input type="text" value="{{ m.longueur_chemise|default_if_none:'-' }}" readonly></div>
+                                <div class="form-field"><label>Ceinture</label><input type="text" value="{{ m.ceinture|default_if_none:'-' }}" readonly></div>
+                                <div class="form-field"><label>Tour hanche</label><input type="text" value="{{ m.tour_hanche|default_if_none:'-' }}" readonly></div>
+                                <div class="form-field"><label>Longueur pantalon</label><input type="text" value="{{ m.longueur_pantalon|default_if_none:'-' }}" readonly></div>
+                                <div class="form-field"><label>Longueur genou</label><input type="text" value="{{ m.longueur_genou|default_if_none:'-' }}" readonly></div>
+                                <div class="form-field"><label>Tour genou</label><input type="text" value="{{ m.tour_genou|default_if_none:'-' }}" readonly></div>
+                                <div class="form-field"><label>Tour bas</label><input type="text" value="{{ m.tour_bas|default_if_none:'-' }}" readonly></div>
+                                <div class="form-field"><label>Tour cuisse</label><input type="text" value="{{ m.tour_cuisse|default_if_none:'-' }}" readonly></div>
+                                <div class="form-field"><label>Longueur culotte</label><input type="text" value="{{ m.longueur_culotte|default_if_none:'-' }}" readonly></div>
+                                <div class="form-field"><label>Longueur gilet</label><input type="text" value="{{ m.longueur_gilet|default_if_none:'-' }}" readonly></div>
+                                <div class="form-field"><label>Longueur veste</label><input type="text" value="{{ m.longueur_veste|default_if_none:'-' }}" readonly></div>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn-modal btn-modal-cancel" onclick="closeModalMesureHomme('modal-{{ m.id }}')">
+                                    Fermer
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <tr>
+                        <td colspan="21" style="text-align:center; color:red;"></td>
+                    </tr>
+                {% endfor %}
+            </div>
+            {% if mesures.has_other_pages %}
+                <div class="pagination-container">
+                    <div class="pagination-info">
+                        Affichage de {{ mesures.start_index }} à {{ mesures.end_index }} sur {{ mesures.paginator.count }} mesuress
+                    </div>
+                    
+                    <div class="pagination">
+                        {% if mesures.has_previous %}
+                            <a href="?page=1" class="pagination-btn" title="Première page">
+                                <i class="ri-arrow-left-double-line"></i>
+                            </a>
+                            <a href="?page={{ mesures.previous_page_number }}" class="pagination-btn" title="Page précédente">
+                                <i class="ri-arrow-left-s-line"></i>
+                            </a>
+                        {% else %}
+                            <span class="pagination-btn disabled">
+                                <i class="ri-arrow-left-double-line"></i>
+                            </span>
+                            <span class="pagination-btn disabled">
+                                <i class="ri-arrow-left-s-line"></i>
+                            </span>
+                        {% endif %}
+
+                        {% for num in mesures.paginator.page_range %}
+                            {% if mesures.number == num %}
+                                <span class="pagination-btn active">{{ num }}</span>
+                            {% elif num > mesures.number|add:'-3' and num < mesures.number|add:'3' %}
+                                <a href="?page={{ num }}" class="pagination-btn">{{ num }}</a>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if mesures.has_next %}
+                            <a href="?page={{ mesures.next_page_number }}" class="pagination-btn" title="Page suivante">
+                                <i class="ri-arrow-right-s-line"></i>
+                            </a>
+                            <a href="?page={{ mesures.paginator.num_pages }}" class="pagination-btn" title="Dernière page">
+                                <i class="ri-arrow-right-double-line"></i>
+                            </a>
+                        {% else %}
+                            <span class="pagination-btn disabled">
+                                <i class="ri-arrow-right-s-line"></i>
+                            </span>
+                            <span class="pagination-btn disabled">
+                                <i class="ri-arrow-right-double-line"></i>
+                            </span>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Modal Nouvelle Mesure -->
+    <div class="modal-overlay" id="modalAddMesureHomme">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Nouvelle mesure homme</h3>
+                <button type="button" class="modal-close" onclick="closeModalAddMesureHomme()">
+                    <i class="ri-close-line"></i>
+                </button>
+            </div>
+            
+            <form action="{% url 'ajouter_mesure_homme' %}" id="mesureHommeForm" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="client_id" id="client_id">
+
+                <div class="modal-body" style="margin-top: -3%;">
+
+                    {% for field in form %}
+                        <div class="form-field">
+
+                            <label class="form-label-modal" for="{{ field.id_for_label }}">
+                                {{ field.label }}
+                            </label>
+
+                            {{ field }}
+
+                            {% if field.errors %}
+                                <div class="error-message">
+                                    <i class="ri-error-warning-line"></i>
+                                    <span>{{ field.errors.0 }}</span>
+                                </div>
+                            {% endif %}
+
+                        </div>
+                    {% endfor %}
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn-modal btn-modal-cancel" onclick="closeModalAddMesureHomme()">
+                        Annuler
+                    </button>
+                    <button type="submit" class="btn-modal btn-modal-submit">
+                        <i class="ri-check-line" style="margin-right: 0.5rem;"></i>
+                        Enregistrer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modalEditMesureHomme" style="display:none;">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Modifier la mesure</h3>
+                <button type="button" class="modal-close" onclick="closeModalEditMesureHomme()">
+                    <i class="ri-close-line"></i>
+                </button>
+            </div>
+
+            <form id="editMesureHommeForm" method="post" action="">
+                {% csrf_token %}
+                <input type="hidden" name="client" id="edit_client_id">
+                <div class="modal-body">
+                    <div class="form-field"><label class="form-label-modal">Épaule dos</label><input class="form-input" type="number" step="0.1" name="epaule_dos" id="edit_epaule_dos"></div>
+                    <div class="form-field"><label class="form-label-modal">Tour poitrine</label><input class="form-input" type="number" step="0.1" name="tour_poitrine" id="edit_tour_poitrine"></div>
+                    <div class="form-field"><label class="form-label-modal">Tour manche</label><input class="form-input" type="number" step="0.1" name="tour_manche" id="edit_tour_manche"></div>
+                    <div class="form-field"><label class="form-label-modal">Longueur manche</label><input class="form-input" type="number" step="0.1" name="longueur_manche" id="edit_longueur_manche"></div>
+                    <div class="form-field"><label class="form-label-modal">Longueur bohumba</label><input class="form-input" type="number" step="0.1" name="longueur_bohumba" id="edit_longueur_bohumba"></div>
+                    <div class="form-field"><label class="form-label-modal">Tour cou</label><input class="form-input" type="number" step="0.1" name="tour_cou" id="edit_tour_cou"></div>
+                    <div class="form-field"><label class="form-label-modal">Longueur chemise</label><input class="form-input" type="number" step="0.1" name="longueur_chemise" id="edit_longueur_chemise"></div>
+                    <div class="form-field"><label class="form-label-modal">Ceinture</label><input class="form-input" type="number" step="0.1" name="ceinture" id="edit_ceinture"></div>
+                    <div class="form-field"><label class="form-label-modal">Tour hanche</label><input class="form-input" type="number" step="0.1" name="tour_hanche" id="edit_tour_hanche"></div>
+                    <div class="form-field"><label class="form-label-modal">Longueur pantalon</label><input class="form-input" type="number" step="0.1" name="longueur_pantalon" id="edit_longueur_pantalon"></div>
+                    <div class="form-field"><label class="form-label-modal">Longueur genou</label><input class="form-input" type="number" step="0.1" name="longueur_genou" id="edit_longueur_genou"></div>
+                    <div class="form-field"><label class="form-label-modal">Tour genou</label><input class="form-input" type="number" step="0.1" name="tour_genou" id="edit_tour_genou"></div>
+                    <div class="form-field"><label class="form-label-modal">Tour bas</label><input class="form-input" type="number" step="0.1" name="tour_bas" id="edit_tour_bas"></div>
+                    <div class="form-field"><label class="form-label-modal">Tour cuisse</label><input class="form-input" type="number" step="0.1" name="tour_cuisse" id="edit_tour_cuisse"></div>
+                    <div class="form-field"><label class="form-label-modal">Longueur culotte</label><input class="form-input" type="number" step="0.1" name="longueur_culotte" id="edit_longueur_culotte"></div>
+                    <div class="form-field"><label class="form-label-modal">Longueur gilet</label><input class="form-input" type="number" step="0.1" name="longueur_gilet" id="edit_longueur_gilet"></div>
+                    <div class="form-field"><label class="form-label-modal">Longueur veste</label><input class="form-input" type="number" step="0.1" name="longueur_veste" id="edit_longueur_veste"></div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn-modal btn-modal-cancel" onclick="closeModalEditMesureHomme()">
+                        Annuler
+                    </button>
+                    <button type="submit" class="btn-modal btn-modal-submit">
+                        <i class="ri-check-line" style="margin-right: 0.5rem;"></i>
+                        Enregistrer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+
+    <div class="modal-overlay" id="modalDeleteMesureHomme">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Suppression de mesure de Homme</h3>
+                <button class="modal-close" onclick="closeModalDeleteMesureHomme()">
+                    <i class="ri-close-line"></i>
+                </button>
+            </div>
+            
+            <div class="modal-body" id="deleteMesureHommeMessage">
+                Êtes-vous sûr de vouloir supprimer cette mesure ?
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn-modal btn-modal-cancel" onclick="closeModalDeleteMesureHomme()">
+                    Non
+                </button>
+                <a href="{% url 'supprimer_mesure_homme' 0 %}" id="deleteMesureHommeLink" class="btn-modal btn-modal-submit" style="text-decoration: none; text-align: center;">
+                    Oui
+                </a>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

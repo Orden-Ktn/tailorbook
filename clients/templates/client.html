@@ -1,0 +1,196 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <!-- Dashboard View -->
+    <div class="page-content" style="animation: fadeInUp 0.6s ease;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; margin-top: -1rem;">
+            <div>
+                <h2 style="font-family: 'Cormorant Garamond', serif; font-size: 2rem; margin-bottom: 0.5rem;">Clientèle</h2>
+                <!-- <p style="color: var(--slate);">248 clients au total</p> -->
+            </div>
+            <button class="card-action" style="padding: 0.75rem 1.5rem; background-color: #59c85a; color: white;" onclick="openModalAddClient()">
+                <!-- <i class="ri-user-add-line" style="margin-right: 0.5rem;"></i> -->
+                Ajouter
+            </button>
+        </div>
+        <div class="card">
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>N°</th>
+                            <th>Nom et Prenoms</th>
+                            <th>Sexe</th>
+                            <th>Téléphone</th>
+                            <th>Adresse</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for c in client %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ c.nom_prenom }}</td>
+                                <td>{{ c.sexe }}</td>
+                                <td>{{ c.telephone }}</td>
+                                <td>{{ c.adresse }}</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <!-- <button class="action-btn btn-view" title="Voir">
+                                            <i class="ri-eye-line"></i>
+                                        </button> -->
+                                        <button 
+                                            class="action-btn btn-edit"
+                                            title="Modifier"
+                                            onclick="openModalEditClient(
+                                                '{{ c.id }}',
+                                                '{{ c.nom_prenom|escapejs }}',
+                                                '{{ c.sexe|escapejs }}',
+                                                '{{ c.telephone|escapejs }}',
+                                                '{{ c.adresse|escapejs }}'
+                                            )">
+                                            <i class="ri-edit-line"></i>
+                                        </button>
+                                        <button class="action-btn btn-delete" title="Supprimer"  onclick="openModalDeleteClient('{{ c.id }}', '{{ c.nom_prenom|escapejs }}')">
+                                            <i class="ri-delete-bin-line"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" style="text-align: center; color: red; font-style: italic;">Aucun(e) client(e) trouvé(e)
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% if client.has_other_pages %}
+                <div class="pagination-container">
+                    <div class="pagination-info">
+                        Affichage de {{ client.start_index }} à {{ client.end_index }} sur {{ client.paginator.count }} clients
+                    </div>
+                    
+                    <div class="pagination">
+                        {% if client.has_previous %}
+                            <a href="?page=1" class="pagination-btn" title="Première page">
+                                <i class="ri-arrow-left-double-line"></i>
+                            </a>
+                            <a href="?page={{ client.previous_page_number }}" class="pagination-btn" title="Page précédente">
+                                <i class="ri-arrow-left-s-line"></i>
+                            </a>
+                        {% else %}
+                            <span class="pagination-btn disabled">
+                                <i class="ri-arrow-left-double-line"></i>
+                            </span>
+                            <span class="pagination-btn disabled">
+                                <i class="ri-arrow-left-s-line"></i>
+                            </span>
+                        {% endif %}
+
+                        {% for num in client.paginator.page_range %}
+                            {% if client.number == num %}
+                                <span class="pagination-btn active">{{ num }}</span>
+                            {% elif num > client.number|add:'-3' and num < client.number|add:'3' %}
+                                <a href="?page={{ num }}" class="pagination-btn">{{ num }}</a>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if client.has_next %}
+                            <a href="?page={{ client.next_page_number }}" class="pagination-btn" title="Page suivante">
+                                <i class="ri-arrow-right-s-line"></i>
+                            </a>
+                            <a href="?page={{ client.paginator.num_pages }}" class="pagination-btn" title="Dernière page">
+                                <i class="ri-arrow-right-double-line"></i>
+                            </a>
+                        {% else %}
+                            <span class="pagination-btn disabled">
+                                <i class="ri-arrow-right-s-line"></i>
+                            </span>
+                            <span class="pagination-btn disabled">
+                                <i class="ri-arrow-right-double-line"></i>
+                            </span>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Modal Nouvelle Commande -->
+    <div class="modal-overlay" id="modalAddClient">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Nouveau/Nouvelle client(e)</h3>
+                <button type="button" class="modal-close" onclick="closeModalAddClient()">
+                    <i class="ri-close-line"></i>
+                </button>
+            </div>
+            
+            <form action="{% url 'ajouter_client' %}" id="clientForm" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="client_id" id="client_id">
+
+                <div class="modal-body" style="margin-top: -3%;">
+
+                    {% for field in form %}
+                        <div class="form-field">
+
+                            <label class="form-label-modal" for="{{ field.id_for_label }}">
+                                {{ field.label }}
+                            </label>
+
+                            {{ field }}
+
+                            {% if field.errors %}
+                                <div class="error-message">
+                                    <i class="ri-error-warning-line"></i>
+                                    <span>{{ field.errors.0 }}</span>
+                                </div>
+                            {% endif %}
+
+                        </div>
+                    {% endfor %}
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn-modal btn-modal-cancel" onclick="closeModalAddClient()">
+                        Annuler
+                    </button>
+                    <button type="submit" class="btn-modal btn-modal-submit">
+                        <i class="ri-check-line" style="margin-right: 0.5rem;"></i>
+                        Enregistrer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modalDeleteClient">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Suppression de client(e)</h3>
+                <button class="modal-close" onclick="closeModalDeleteClient()">
+                    <i class="ri-close-line"></i>
+                </button>
+            </div>
+            
+            <div class="modal-body" style="grid-template-columns: repeat(1, 1fr);" id="deleteClientMessage">
+                Êtes-vous sûr de vouloir supprimer ce(tte) client(e) ?
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn-modal btn-modal-cancel" onclick="closeModalDeleteClient()">
+                    Non
+                </button>
+                <a href="{% url 'supprimer_client' 0 %}" id="deleteClientLink" class="btn-modal btn-modal-submit" style="text-decoration: none; text-align: center;">
+                    Oui
+                </a>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
