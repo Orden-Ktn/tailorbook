@@ -9,7 +9,7 @@ SECRET_KEY = 'django-insecure-wkb0mrj75g8i!o*!d32q3r=+5s1%62=p#2rjnse%w$uhk#g0dr
 
 DEBUG = True 
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['tailorbook.pythonanywhere.com', 'localhost', '127.0.0.1']
 
 # Application definition
 INSTALLED_APPS = [
@@ -95,11 +95,11 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# ⚠️ STATIC FILES CONFIGURATION - CORRIGÉE
+
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'  # Utilisez Path, pas os.path.join
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [
-    BASE_DIR / 'static'  # Utilisez Path
+    BASE_DIR / 'static'
 ]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
