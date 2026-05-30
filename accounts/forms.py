@@ -8,16 +8,21 @@ class CustomUserCreationForm(forms.ModelForm):
         widget=forms.PasswordInput(),
         help_text="Votre mot de passe doit contenir au moins 8 caractères."
     )
+    username = forms.CharField(
+        label="Nom d'utilisateur",
+        help_text="Le nom d'utilisateur doit être unique.",
+        widget=forms.TextInput(attrs={'placeholder': "Entrez votre nom d'utilisateur. Ex: 'toto123'"})
+    )
 
     class Meta:
         model = CustomUser
-        fields = ['email']  # uniquement email + mot de passe
+        fields = ['username']
 
-    def clean_email(self):
-        email = self.cleaned_data.get("email").lower()
-        if CustomUser.objects.filter(email=email).exists():
-            raise forms.ValidationError("Cet email est déjà utilisé.")
-        return email
+    def clean_username(self):
+        username = self.cleaned_data.get("username")
+        if CustomUser.objects.filter(username=username).exists():
+            raise forms.ValidationError("Ce nom d'utilisateur est déjà utilisé.")
+        return username
 
     def save(self, commit=True):
         user = super().save(commit=False)
@@ -26,16 +31,13 @@ class CustomUserCreationForm(forms.ModelForm):
             user.save()
         return user
 
-class VerificationCodeForm(forms.Form):
-    code = forms.CharField(max_length=6, label="Code de vérification")
 
+class LoginForm(forms.Form):
+    username = forms.CharField(label="Nom d'utilisateur")
+    password = forms.CharField(widget=forms.PasswordInput)
 
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ['nom_atelier', 'contact', 'adresse']
 
-
-class LoginForm(forms.Form):
-    email = forms.EmailField()
-    password = forms.CharField(widget=forms.PasswordInput)

@@ -13,7 +13,7 @@ def commande(request):
     form = CommandeForm(request.POST or None, user=user)
 
     # ✅ Commandes de l'utilisateur connecté
-    commande_qs = Commande.objects.filter(client__atelier=user)
+    commande_qs = Commande.objects.filter(client__atelier=user).order_by('-id')
 
     # ✅ Clients de l'utilisateur connecté
     client = Client.objects.filter(atelier=user)
