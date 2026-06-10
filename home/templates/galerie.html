@@ -1,0 +1,318 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TailorBook — Galerie des ateliers</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="icon" type="image/png" href="/static/images/favicon/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Crimson+Text:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Crimson Text', serif;
+            background: #0f0e0c;
+            color: #f0ebe3;
+            min-height: 100vh;
+        }
+
+        /* ── Header ── */
+        .site-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.25rem 2.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            position: sticky; top: 0;
+            background: rgba(15,14,12,0.92);
+            backdrop-filter: blur(12px);
+            z-index: 100;
+        }
+        .logo { display: flex; align-items: center; gap: .75rem; }
+        .logo img { width: 36px; height: 36px; object-fit: contain; }
+        .logo h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            color: #c9a96e;
+            letter-spacing: .5px;
+        }
+        .header-links { display: flex; gap: 1rem; }
+        .header-links a {
+            padding: .5rem 1.2rem;
+            border-radius: 6px;
+            font-size: .95rem;
+            text-decoration: none;
+            transition: background .2s;
+        }
+        .btn-login { color: #c9a96e; border: 1px solid #c9a96e; }
+        .btn-login:hover { background: rgba(201,169,110,.1); }
+        .btn-register { background: #c9a96e; color: #0f0e0c; font-weight: 600; }
+        .btn-register:hover { background: #b8935a; }
+
+        /* ── Hero ── */
+        .hero {
+            text-align: center;
+            padding: 4rem 2rem 2.5rem;
+        }
+        .hero h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.8rem, 4vw, 3rem);
+            color: #c9a96e;
+            margin-bottom: .75rem;
+        }
+        .hero p { color: #a09080; font-size: 1.1rem; max-width: 520px; margin: 0 auto; }
+
+        /* ── Grid ateliers ── */
+        .galerie-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem 4rem;
+        }
+
+        .atelier-card {
+            background: #1a1814;
+            border: 1px solid rgba(201,169,110,.15);
+            border-radius: 16px;
+            margin-bottom: 2.5rem;
+            overflow: hidden;
+            transition: border-color .3s;
+        }
+        .atelier-card:hover { border-color: rgba(201,169,110,.4); }
+
+        .atelier-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,.06);
+        }
+        .atelier-info { display: flex; align-items: center; gap: 1rem; }
+        .atelier-avatar {
+            width: 48px; height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #c9a96e, #8b6914);
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            color: #0f0e0c;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        .atelier-nom {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.15rem;
+            color: #f0ebe3;
+        }
+        .atelier-nb {
+            font-size: .85rem;
+            color: #7a6a58;
+            margin-top: 2px;
+        }
+
+        /* Bouton WhatsApp */
+        .btn-whatsapp {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            padding: .55rem 1.2rem;
+            background: #25D366;
+            color: #fff;
+            border-radius: 30px;
+            text-decoration: none;
+            font-size: .9rem;
+            font-weight: 600;
+            transition: background .2s, transform .15s;
+        }
+        .btn-whatsapp:hover { background: #1ebe5d; transform: translateY(-1px); }
+        .btn-whatsapp i { font-size: 1.1rem; }
+
+        /* ── Images grid ── */
+        .modeles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 10px;
+            padding: 1.25rem 1.5rem 1.5rem;
+        }
+        .modele-item {
+            position: relative;
+            aspect-ratio: 3/4;
+            border-radius: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            background: #111;
+        }
+        .modele-item img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            transition: transform .4s ease;
+        }
+        .modele-item:hover img { transform: scale(1.06); }
+        .modele-overlay {
+            position: absolute; inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,.7) 0%, transparent 50%);
+            opacity: 0;
+            transition: opacity .3s;
+            display: flex; align-items: flex-end;
+            padding: .75rem;
+        }
+        .modele-item:hover .modele-overlay { opacity: 1; }
+        .modele-desc { font-size: .8rem; color: #f0ebe3; }
+
+        /* ── Empty state ── */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #5a4e42;
+        }
+        .empty-state i { font-size: 3rem; margin-bottom: 1rem; display: block; }
+
+        /* ── Lightbox ── */
+        .lightbox {
+            display: none;
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,.92);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .lightbox.active { display: flex; }
+        .lightbox img {
+            max-width: 90vw;
+            max-height: 90vh;
+            border-radius: 10px;
+            object-fit: contain;
+        }
+        .lightbox-close {
+            position: absolute; top: 1.5rem; right: 1.5rem;
+            background: none; border: none;
+            color: #fff; font-size: 2rem; cursor: pointer;
+        }
+        .lightbox-nav {
+            position: absolute;
+            top: 50%; transform: translateY(-50%);
+            background: rgba(255,255,255,.1);
+            border: none; color: #fff;
+            width: 48px; height: 48px;
+            border-radius: 50%; font-size: 1.4rem;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: background .2s;
+        }
+        .lightbox-nav:hover { background: rgba(255,255,255,.25); }
+        .lightbox-prev { left: 1.5rem; }
+        .lightbox-next { right: 1.5rem; }
+
+        @media (max-width: 600px) {
+            .site-header { padding: 1rem 1.25rem; }
+            .modeles-grid { grid-template-columns: repeat(3, 1fr); gap: 6px; padding: 1rem; }
+            .atelier-header { flex-direction: column; align-items: flex-start; gap: .75rem; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="site-header">
+    <div class="logo">
+        <img class="logo-icon gallery-item" src="/static/images/logo.png" alt="TailorBook">
+        <h1>TailorBook</h1>
+    </div>
+    
+</header>
+
+<section class="hero">
+    <h2>Galerie des ateliers</h2>
+    <p>Découvrez les créations des meilleurs tailleurs et contactez-les directement.</p>
+</section>
+
+<div class="galerie-container">
+    {% if ateliers %}
+        {% for atelier in ateliers %}
+        <div class="atelier-card">
+            <div class="atelier-header">
+                <div class="atelier-info">
+                    <div class="atelier-avatar">
+                        {{ atelier.nom_atelier|first|upper }}
+                    </div>
+                    <div>
+                        <div class="atelier-nom">{{ atelier.nom_atelier }}</div>
+                        <div class="atelier-nb">{{ atelier.modeles|length }} modèle{{ atelier.modeles|length|pluralize }}</div>
+                    </div>
+                </div>
+                {% if atelier.contact %}
+                <a href="https://wa.me/{{ atelier.contact }}" target="_blank" class="btn-whatsapp">
+                    <i class="ri-whatsapp-line"></i> Contacter
+                </a>
+                {% endif %}
+            </div>
+
+            <div class="modeles-grid">
+                {% for modele in atelier.modeles %}
+                <div class="modele-item"
+                     onclick="openLightbox(this)"
+                     data-src="{{ modele.image.url }}"
+                     data-desc="{{ modele.description }}">
+                    <img src="{{ modele.image.url }}" alt="{{ modele.description|default:'Modèle' }}" loading="lazy">
+                    <div class="modele-overlay">
+                        <span class="modele-desc">{{ modele.description }}</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="empty-state">
+            <i class="ri-image-line"></i>
+            <p>Aucun atelier n'a encore publié de modèles.</p>
+        </div>
+    {% endif %}
+</div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightboxOutside(event)">
+    <button class="lightbox-close" onclick="closeLightbox()"><i class="ri-close-line"></i></button>
+    <button class="lightbox-nav lightbox-prev" onclick="lightboxNav(-1)"><i class="ri-arrow-left-s-line"></i></button>
+    <img id="lightboxImg" src="" alt="">
+    <button class="lightbox-nav lightbox-next" onclick="lightboxNav(1)"><i class="ri-arrow-right-s-line"></i></button>
+</div>
+
+<script>
+    let currentImages = [];
+    let currentIndex = 0;
+
+    function openLightbox(el) {
+        // Collecter toutes les images de la même carte
+        const card = el.closest('.atelier-card');
+        const items = card.querySelectorAll('.modele-item');
+        currentImages = Array.from(items).map(i => i.dataset.src);
+        currentIndex = Array.from(items).indexOf(el);
+        document.getElementById('lightboxImg').src = currentImages[currentIndex];
+        document.getElementById('lightbox').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+        document.getElementById('lightbox').classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    function closeLightboxOutside(e) {
+        if (e.target === document.getElementById('lightbox')) closeLightbox();
+    }
+
+    function lightboxNav(dir) {
+        currentIndex = (currentIndex + dir + currentImages.length) % currentImages.length;
+        document.getElementById('lightboxImg').src = currentImages[currentIndex];
+    }
+
+    document.addEventListener('keydown', e => {
+        if (!document.getElementById('lightbox').classList.contains('active')) return;
+        if (e.key === 'Escape') closeLightbox();
+        if (e.key === 'ArrowLeft') lightboxNav(-1);
+        if (e.key === 'ArrowRight') lightboxNav(1);
+    });
+</script>
+</body>
+</html>

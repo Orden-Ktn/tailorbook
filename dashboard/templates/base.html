@@ -19,7 +19,7 @@
     <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
         <div class="logo-section">
-            <div class="logo-content">
+            <div class="logo-content" style="padding: 1%; margin: -8%;">
                 <img class="logo-icon" src="{% static 'images/logo.png' %}" alt="">
                 <span class="logo-text">TailorBook</span>
             </div>
@@ -56,9 +56,15 @@
                     <span>Mesures Hommes</span>
                 </a>
             </div>
+            <div class="nav-item">
+                <a href="{% url 'mes_modeles' %}" class="nav-link {% if request.resolver_match.url_name == 'mes_modeles' %}active{% endif %}" data-page="mes_modeles">
+                    <i class="ri-gallery-line nav-icon"></i>
+                    <span>Mes modèles</span>
+                </a>
+            </div>
         </nav>
 
-        <div class="user-section">
+        <div class="user-section" style="padding: 1%;">
             <div class="user-info">
                 <div class="user-avatar">
                     <img class="avatar-icon" src="{% static 'images/user.png' %}" alt="">

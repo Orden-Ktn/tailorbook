@@ -7,9 +7,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-wkb0mrj75g8i!o*!d32q3r=+5s1%62=p#2rjnse%w$uhk#g0dr'
 
-DEBUG = False 
+DEBUG = True
 
-ALLOWED_HOSTS = ['tailorbook.pythonanywhere.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 INSTALLED_APPS = [

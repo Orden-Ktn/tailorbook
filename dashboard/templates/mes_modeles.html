@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="page-content" style="animation: fadeInUp 0.6s ease;">
+
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; margin-top:-1rem;">
+        <div>
+            <h2 style="font-family:'Cormorant Garamond',serif; font-size:2rem; margin-bottom:.3rem;">Mes Modèles</h2>
+            <p style="color:var(--slate); font-size:.9rem;">
+                {{ nb_modeles }}/{{ max_modeles }} modèles publiés
+            </p>
+        </div>
+        {% if peut_ajouter %}
+        <button class="card-action"
+                style="padding:.75rem 1.5rem; background:#59c85a; color:white;"
+                onclick="document.getElementById('modalAjout').style.display='flex'">
+            <i class="ri-image-add-line" style="margin-right:.4rem;"></i> Ajouter
+        </button>
+        {% else %}
+        <span style="color:#e05555; font-size:.9rem; font-style:italic;">
+            <i class="ri-error-warning-line"></i> Limite de 5 modèles atteinte
+        </span>
+        {% endif %}
+    </div>
+
+    <div class="card">
+        {% if modeles %}
+        <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(180px,1fr)); gap:14px; padding:1.5rem;">
+            {% for m in modeles %}
+            <div style="position:relative; border-radius:12px; overflow:hidden; aspect-ratio:3/4; background:#111; box-shadow:0 2px 12px rgba(0,0,0,.15);">
+                <img src="{{ m.image.url }}" alt="{{ m.description|default:'Modèle' }}"
+                     style="width:100%; height:100%; object-fit:cover; display:block;">
+                {% if m.description %}
+                <div style="position:absolute; bottom:0; left:0; right:0;
+                            background:linear-gradient(transparent,rgba(0,0,0,.7));
+                            padding:.5rem .75rem; color:#fff; font-size:.8rem;">
+                    {{ m.description }}
+                </div>
+                {% endif %}
+                <!-- Bouton supprimer -->
+                <form method="post" action="{% url 'supprimer_modele' m.id %}"
+                      style="position:absolute; top:.5rem; right:.5rem;"
+                      onsubmit="return confirm('Supprimer ce modèle ?')">
+                    {% csrf_token %}
+                    <button type="submit"
+                            style="width:32px;height:32px;border-radius:50%;
+                                   background:rgba(220,50,50,.85); border:none;
+                                   color:white; cursor:pointer; display:flex;
+                                   align-items:center; justify-content:center;">
+                        <i class="ri-delete-bin-line"></i>
+                    </button>
+                </form>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div style="text-align:center; padding:3rem; color:#9a8f83;">
+            <i class="ri-image-line" style="font-size:2.5rem; display:block; margin-bottom:.75rem;"></i>
+            Aucun modèle publié pour l'instant.
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Modal ajout image -->
+<div id="modalAjout" class="modal-overlay" style="display:none;">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 class="modal-title">Ajouter un modèle</h3>
+            <button class="modal-close" onclick="document.getElementById('modalAjout').style.display='none'">
+                <i class="ri-close-line"></i>
+            </button>
+        </div>
+        <form method="post" enctype="multipart/form-data" action="{% url 'mes_modeles' %}">
+            {% csrf_token %}
+            <div class="modal-body" style="grid-template-columns:1fr;">
+
+                <!-- Zone de drop -->
+                <div id="dropZone"
+                     style="border:2px dashed var(--border,#ddd); border-radius:10px;
+                            padding:2rem; text-align:center; cursor:pointer; transition:border-color .2s;"
+                     onclick="document.getElementById('imageInput').click()"
+                     ondragover="event.preventDefault(); this.style.borderColor='#59c85a';"
+                     ondragleave="this.style.borderColor=''"
+                     ondrop="handleDrop(event)">
+                    <i class="ri-upload-cloud-line" style="font-size:2rem; color:#9a8f83; display:block; margin-bottom:.5rem;"></i>
+                    <p style="color:#9a8f83; font-size:.9rem;">Cliquez ou glissez une image ici</p>
+                    <p style="color:#bbb; font-size:.8rem;">JPG, PNG, WEBP · max 2 Mo</p>
+                </div>
+                <input type="file" id="imageInput" name="image" accept="image/*"
+                       style="display:none;" onchange="previewImage(this)">
+
+                <!-- Prévisualisation -->
+                <div id="preview" style="display:none; text-align:center;">
+                    <img id="previewImg" src="" alt=""
+                         style="max-height:200px; border-radius:8px; object-fit:contain;">
+                </div>
+
+                <div class="form-field">
+                    <label class="form-label-modal">Description (optionnelle)</label>
+                    <input type="text" name="description" placeholder="Ex: Robe de soirée boubou..."
+                           style="width:100%; padding:.6rem .9rem; border-radius:8px;
+                                  border:1px solid var(--border,#ddd); font-size:.95rem;">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-modal btn-modal-cancel"
+                        onclick="document.getElementById('modalAjout').style.display='none'">
+                    Annuler
+                </button>
+                <button type="submit" class="btn-modal btn-modal-submit">
+                    <i class="ri-check-line" style="margin-right:.4rem;"></i> Publier
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function previewImage(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = e => {
+            document.getElementById('previewImg').src = e.target.result;
+            document.getElementById('preview').style.display = 'block';
+            document.getElementById('dropZone').style.display = 'none';
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+function handleDrop(e) {
+    e.preventDefault();
+    e.currentTarget.style.borderColor = '';
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith('image/')) {
+        const dt = new DataTransfer();
+        dt.items.add(file);
+        const input = document.getElementById('imageInput');
+        input.files = dt.files;
+        previewImage(input);
+    }
+}
+</script>
+{% endblock %}

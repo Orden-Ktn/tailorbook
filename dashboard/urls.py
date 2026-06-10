@@ -10,6 +10,8 @@ urlpatterns = [
 
     path('', views.dashboard, name='dashboard'),
     path('deconnexion/', views.deconnexion, name='deconnexion'),
+    path('mes-modeles/', views.mes_modeles, name='mes_modeles'),
+    path('mes-modeles/supprimer/<int:modele_id>/', views.supprimer_modele, name='supprimer_modele'),
 
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -37,6 +37,11 @@ class LoginForm(forms.Form):
     password = forms.CharField(widget=forms.PasswordInput)
 
 class ProfileForm(forms.ModelForm):
+    contact = forms.CharField(
+        label="Contact",
+        help_text="Le contact doit être votre numéro WhatsApp de préférence.",
+        widget=forms.TextInput(attrs={'placeholder': "Ex: 0144332211"})
+    )
     class Meta:
         model = Profile
         fields = ['nom_atelier', 'contact', 'adresse']

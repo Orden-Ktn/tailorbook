@@ -62,7 +62,6 @@ class MesureFemme(models.Model):
     carrure_devant = models.FloatField(blank=True, null=True)
     carrure_dos = models.FloatField(blank=True, null=True)
     longueur_sein = models.FloatField(blank=True, null=True)
-    longueur_taille = models.FloatField(blank=True, null=True)
     longueur_corsage = models.FloatField(blank=True, null=True)
     tour_taille = models.FloatField(blank=True, null=True)
     ceinture = models.FloatField(blank=True, null=True)
@@ -73,6 +72,13 @@ class MesureFemme(models.Model):
     longueur_chambrage_dos = models.FloatField(blank=True, null=True)
     longueur_bohumba = models.FloatField(blank=True, null=True)
     ecart_seins = models.FloatField(blank=True, null=True)
+
+    longueur_pantalon = models.FloatField(blank=True, null=True)
+    longueur_genou = models.FloatField(blank=True, null=True)
+    longueur_taille_devant = models.FloatField(blank=True, null=True)
+    longueur_taille_dos = models.FloatField(blank=True, null=True)
+    tour_bas = models.FloatField(blank=True, null=True)
+    tour_encolure = models.FloatField(blank=True, null=True)
 
     date = models.DateTimeField(auto_now_add=True)
 

@@ -5,7 +5,7 @@ from django.contrib.auth.hashers import make_password, check_password
 from django.conf import settings
 import random
 from django.contrib.auth.models import AbstractUser, BaseUserManager
-
+from django.core.exceptions import ValidationError
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, username, password=None, **extra_fields):
@@ -51,3 +51,23 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.nom_atelier
+    
+
+
+class ModeleAtelier(models.Model):
+    tailleur = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='modeles')
+    image = models.ImageField(upload_to='modeles/')
+    description = models.CharField(max_length=200, blank=True)
+    date_ajout = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Modèle d'atelier"
+        verbose_name_plural = "Modèles d'atelier"
+        ordering = ['-date_ajout']
+
+    def __str__(self):
+        return f"Modèle de {self.tailleur.get_full_name() or self.tailleur.username}"
+
+    def clean(self):
+        if self.tailleur and ModeleAtelier.objects.filter(tailleur=self.tailleur).exclude(pk=self.pk).count() >= 5:
+            raise ValidationError("Un atelier ne peut pas avoir plus de 5 modèles.")

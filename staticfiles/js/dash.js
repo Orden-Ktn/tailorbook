@@ -192,9 +192,10 @@ function closeModalMesureHomme(modalId) {
 }
 
 function openModalEditMesureFemme(id, client_id, epaule_dos, tour_poitrine, longueur_manche, tour_manche,
-    carrure_devant, carrure_dos, longueur_sein, longueur_taille, longueur_corsage,
+    carrure_devant, carrure_dos, longueur_sein, longueur_corsage,
     tour_taille, ceinture, tour_hanche, longueur_clotop, longueur_robe,
-    longueur_jupe, longueur_chambrage_dos, longueur_bohumba, ecart_seins) {
+    longueur_jupe, longueur_chambrage_dos, longueur_bohumba, ecart_seins, longueur_pantalon,
+    longueur_genou, longueur_taille_devant, longueur_taille_dos, tour_bas, tour_encolure) {
 
     // Remplir les champs
     document.getElementById('edit_client_id').value = client_id;
@@ -205,7 +206,6 @@ function openModalEditMesureFemme(id, client_id, epaule_dos, tour_poitrine, long
     document.getElementById('edit_carrure_devant').value = carrure_devant;
     document.getElementById('edit_carrure_dos').value = carrure_dos;
     document.getElementById('edit_longueur_sein').value = longueur_sein;
-    document.getElementById('edit_longueur_taille').value = longueur_taille;
     document.getElementById('edit_longueur_corsage').value = longueur_corsage;
     document.getElementById('edit_tour_taille').value = tour_taille;
     document.getElementById('edit_ceinture').value = ceinture;
@@ -216,6 +216,12 @@ function openModalEditMesureFemme(id, client_id, epaule_dos, tour_poitrine, long
     document.getElementById('edit_longueur_chambrage_dos').value = longueur_chambrage_dos;
     document.getElementById('edit_longueur_bohumba').value = longueur_bohumba;
     document.getElementById('edit_ecart_seins').value = ecart_seins;
+    document.getElementById('edit_longueur_pantalon').value = longueur_pantalon;
+    document.getElementById('edit_longueur_genou').value = longueur_genou;
+    document.getElementById('edit_longueur_taille_devant').value = longueur_taille_devant;
+    document.getElementById('edit_longueur_taille_dos').value = longueur_taille_dos;
+    document.getElementById('edit_tour_bas').value = tour_bas;
+    document.getElementById('edit_tour_encolure').value = tour_encolure;
 
     // Définir l'action du formulaire dynamiquement
     document.getElementById('editMesureFemmeForm').action = `/clients/mesures_femmes/${id}/modifier/`;
