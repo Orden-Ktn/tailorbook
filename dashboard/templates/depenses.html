@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-content" style="animation: fadeInUp 0.6s ease;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; margin-top: -1rem;">
+        <div>
+            <h2 style="font-family: 'Cormorant Garamond', serif; font-size: 2rem; margin-bottom: 0.5rem;">Dépenses</h2>
+        </div>
+        <button class="card-action" style="padding: 0.75rem 1.5rem; background-color: #59c85a; color: white;" onclick="openModalAdd()">
+            Ajouter
+        </button>
+    </div>
+
+    <div class="card">
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>N°</th>
+                        <th>Motif</th>
+                        <th>Montant (FCFA)</th>
+                        <th>Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for d in depense %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ d.motif }}</td>
+                            <td>{{ d.montant }}</td>
+                            <td>{{ d.date|date:"d/m/Y H:i" }}</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button
+                                        class="action-btn btn-edit"
+                                        title="Modifier"
+                                        onclick="openModalEdit('{{ d.id }}', '{{ d.motif|escapejs }}', '{{ d.montant }}')">
+                                        <i class="ri-edit-line"></i>
+                                    </button>
+                                    <button
+                                        class="action-btn btn-delete"
+                                        title="Supprimer"
+                                        onclick="openModalDelete('{{ d.id }}', '{{ d.motif|escapejs }}')">
+                                        <i class="ri-delete-bin-line"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="5" style="text-align: center; color: red; font-style: italic;">
+                                Aucune dépense trouvée
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% if depense.has_other_pages %}
+        <div class="pagination-container">
+            <div class="pagination-info">
+                Affichage de {{ depense.start_index }} à {{ depense.end_index }} sur {{ depense.paginator.count }} dépenses
+            </div>
+            <div class="pagination">
+                {% if depense.has_previous %}
+                    <a href="?page=1" class="pagination-btn"><i class="ri-arrow-left-double-line"></i></a>
+                    <a href="?page={{ depense.previous_page_number }}" class="pagination-btn"><i class="ri-arrow-left-s-line"></i></a>
+                {% else %}
+                    <span class="pagination-btn disabled"><i class="ri-arrow-left-double-line"></i></span>
+                    <span class="pagination-btn disabled"><i class="ri-arrow-left-s-line"></i></span>
+                {% endif %}
+
+                {% for num in depense.paginator.page_range %}
+                    {% if depense.number == num %}
+                        <span class="pagination-btn active">{{ num }}</span>
+                    {% elif num > depense.number|add:'-3' and num < depense.number|add:'3' %}
+                        <a href="?page={{ num }}" class="pagination-btn">{{ num }}</a>
+                    {% endif %}
+                {% endfor %}
+
+                {% if depense.has_next %}
+                    <a href="?page={{ depense.next_page_number }}" class="pagination-btn"><i class="ri-arrow-right-s-line"></i></a>
+                    <a href="?page={{ depense.paginator.num_pages }}" class="pagination-btn"><i class="ri-arrow-right-double-line"></i></a>
+                {% else %}
+                    <span class="pagination-btn disabled"><i class="ri-arrow-right-s-line"></i></span>
+                    <span class="pagination-btn disabled"><i class="ri-arrow-right-double-line"></i></span>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Modal Ajout / Modification -->
+<div class="modal-overlay" id="modalAdd">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 class="modal-title" id="modalAddTitle">Nouvelle dépense</h3>
+            <button type="button" class="modal-close" onclick="closeModalAdd()">
+                <i class="ri-close-line"></i>
+            </button>
+        </div>
+
+        <form id="depenseForm" action="/dashboard/depenses/" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="depense_id" id="depense_id">
+
+            <div class="modal-body" style="margin-top: -3%;">
+                {% for field in form %}
+                    <div class="form-field">
+                        <label class="form-label-modal" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}
+                            <div class="error-message">
+                                <i class="ri-error-warning-line"></i>
+                                <span>{{ field.errors.0 }}</span>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn-modal btn-modal-cancel" onclick="closeModalAdd()">Annuler</button>
+                <button type="submit" class="btn-modal btn-modal-submit">
+                    <i class="ri-check-line" style="margin-right: 0.5rem;"></i>Enregistrer
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal Suppression -->
+<div class="modal-overlay" id="modalDelete">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 class="modal-title">Suppression de dépense</h3>
+            <button class="modal-close" onclick="closeModalDelete()">
+                <i class="ri-close-line"></i>
+            </button>
+        </div>
+        <div class="modal-body" style="grid-template-columns: repeat(1, 1fr);" id="deleteMessage">
+            Êtes-vous sûr de vouloir supprimer cette dépense ?
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn-modal btn-modal-cancel" onclick="closeModalDelete()">Non</button>
+            <a href="#" id="deleteLink" class="btn-modal btn-modal-submit" style="text-decoration: none; text-align: center;">Oui</a>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

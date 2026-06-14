@@ -63,6 +63,52 @@ function closeModalDeleteClient() {
 }
 
 
+
+
+// On récupère juste le chemin de base de la page actuelle
+// ex: /dashboard/depenses/
+const BASE = "/dashboard/depenses/";
+
+function openModalAdd() {
+    document.getElementById('modalAddTitle').innerText = 'Nouvelle dépense';
+    document.getElementById('depenseForm').action = BASE;
+    document.getElementById('depense_id').value = '';
+    document.getElementById('id_motif').value = '';
+    document.getElementById('id_montant').value = '';
+    document.getElementById('modalAdd').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeModalAdd() {
+    document.getElementById('modalAdd').classList.remove('active');
+    document.body.style.overflow = 'auto';
+}
+
+function openModalEdit(id, motif, montant) {
+    document.getElementById('modalAddTitle').innerText = 'Modifier la dépense';
+    document.getElementById('depenseForm').action = BASE + 'modifier/' + id + '/';
+    document.getElementById('depense_id').value = id;
+    document.getElementById('id_motif').value = motif;
+    document.getElementById('id_montant').value = montant;
+    document.getElementById('modalAdd').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function openModalDelete(id, motif) {
+    document.getElementById('deleteMessage').innerText =
+        `Êtes-vous sûr de vouloir supprimer "${motif}" ?`;
+    document.getElementById('deleteLink').href = BASE + 'supprimer/' + id + '/';
+    document.getElementById('modalDelete').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeModalDelete() {
+    document.getElementById('modalDelete').classList.remove('active');
+    document.body.style.overflow = 'auto';
+}
+
+
+
 function openModalAddCommand() {
     const modal = document.getElementById('modalAddCommand');
     modal.classList.add('active');

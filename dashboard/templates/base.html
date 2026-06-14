@@ -19,7 +19,7 @@
     <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
         <div class="logo-section">
-            <div class="logo-content" style="padding: 1%; margin: -8%;">
+            <div class="logo-content" style="padding: 1%; margin: -12%;">
                 <img class="logo-icon" src="{% static 'images/logo.png' %}" alt="">
                 <span class="logo-text">TailorBook</span>
             </div>
@@ -57,9 +57,15 @@
                 </a>
             </div>
             <div class="nav-item">
-                <a href="{% url 'mes_modeles' %}" class="nav-link {% if request.resolver_match.url_name == 'mes_modeles' %}active{% endif %}" data-page="mes_modeles">
+                <a href="{% url 'modeles' %}" class="nav-link {% if request.resolver_match.url_name == 'modeles' %}active{% endif %}" data-page="modeles">
                     <i class="ri-gallery-line nav-icon"></i>
                     <span>Mes modèles</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="{% url 'depenses' %}" class="nav-link {% if request.resolver_match.url_name == 'depenses' %}active{% endif %}" data-page="depenses">
+                    <i class="ri-coin-line nav-icon"></i>
+                    <span>Dépenses</span>
                 </a>
             </div>
         </nav>

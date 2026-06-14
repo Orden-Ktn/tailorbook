@@ -10,8 +10,12 @@ urlpatterns = [
 
     path('', views.dashboard, name='dashboard'),
     path('deconnexion/', views.deconnexion, name='deconnexion'),
-    path('mes-modeles/', views.mes_modeles, name='mes_modeles'),
-    path('mes-modeles/supprimer/<int:modele_id>/', views.supprimer_modele, name='supprimer_modele'),
+    path('modeles/', views.mes_modeles, name='modeles'),
+    path('modeles/supprimer/<int:modele_id>/', views.supprimer_modele, name='supprimer_modele'),
+
+    path('depenses/', views.depenses, name='depenses'),
+    path('depenses/modifier/<int:pk>/', views.modifier_depense, name='modifier_depense'),
+    path('depenses/supprimer/<int:pk>/', views.supprimer_depense, name='supprimer_depense'),
 
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

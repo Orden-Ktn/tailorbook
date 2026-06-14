@@ -849,7 +849,7 @@ body::before {
 /* Stats Cards */
 .stats-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     gap: 1.5rem;
     margin-bottom: 2.5rem;
 }
@@ -1126,7 +1126,7 @@ tr:hover {
     }
 
     .stats-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(1, 1fr);
     }
 
     .page-title {
@@ -1141,6 +1141,10 @@ tr:hover {
 
     .topbar-right {
         gap: 0.75rem;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(1, 1fr);
     }
 }
 
