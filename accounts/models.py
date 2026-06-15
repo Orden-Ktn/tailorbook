@@ -61,7 +61,7 @@ class Profile(models.Model):
 
 class ModeleAtelier(models.Model):
     tailleur = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='modeles')
-    image = models.ImageField(upload_to='modeles/')
+    image = models.ImageField(upload_to='')
     description = models.CharField(max_length=200, blank=True)
     date_ajout = models.DateTimeField(auto_now_add=True)
 

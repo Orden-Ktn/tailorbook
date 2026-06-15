@@ -104,7 +104,7 @@ STATICFILES_DIRS = [
 ]
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'modeles'
+MEDIA_ROOT = '/home/tailorbook/modeles/'
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
