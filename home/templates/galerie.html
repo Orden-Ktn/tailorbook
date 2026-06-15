@@ -241,7 +241,7 @@
                     </div>
                 </div>
                 {% if atelier.contact %}
-                <a href="https://wa.me/{{ atelier.contact }}" target="_blank" class="btn-whatsapp">
+                <a href="{{ atelier.profile.whatsapp_url }}" target="_blank" class="btn-whatsapp">
                     <i class="ri-whatsapp-line"></i> Contacter
                 </a>
                 {% endif %}

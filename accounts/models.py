@@ -52,6 +52,11 @@ class Profile(models.Model):
     def __str__(self):
         return self.nom_atelier
     
+    @property
+    def whatsapp_url(self):
+        # Retire le + pour l'URL wa.me
+        number = self.contact.replace('+', '').replace(' ', '')
+        return f"https://wa.me/{number}"
 
 
 class ModeleAtelier(models.Model):

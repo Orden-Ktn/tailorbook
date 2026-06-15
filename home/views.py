@@ -22,6 +22,7 @@ def galerie_tailleurs(request):
             'tailleur': tailleur,
             'modeles': modeles,
             'contact': contact,
+            'profile': getattr(tailleur, 'profile', None),  
             'nom_atelier': getattr(getattr(tailleur, 'profil', None), 'nom_atelier', '') or tailleur.get_full_name() or tailleur.username,
         })
     
