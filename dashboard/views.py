@@ -38,8 +38,8 @@ def dashboard(request):
         total=Sum(ExpressionWrapper(F('montant') - F('avance'), output_field=DecimalField()))
     )['total'] or 0
 
-    total_depenses = Depense.objects.filter(atelier=user).aggregate(
-        total=Sum('montant')
+    total_depenses = Commande.objects.filter(atelier=user).aggregate(
+        total=Sum('depense')
     )['total'] or 0
 
     revenu = total_recette - total_depenses

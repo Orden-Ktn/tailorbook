@@ -6,13 +6,17 @@
     <div class="page-content" style="animation: fadeInUp 0.6s ease;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; margin-top: -1rem;">
             <div>
-                <h2 style="font-family: 'Cormorant Garamond', serif; font-size: 2rem; margin-bottom: 0.5rem;">Commandes</h2>
+                <button class="card-action" style="padding: 0.75rem 1.5rem; background-color: #6c757d; color: white;" onclick="openModalLegende()">
+                Aide
+            </button>
                 <!-- <p style="color: var(--slate);">248 clients au total</p> -->
             </div>
             <button class="card-action" style="padding: 0.75rem 1.5rem; background-color: #59c85a; color: white;" onclick="openModalAddCommand()">
                 <!-- <i class="ri-user-add-line" style="margin-right: 0.5rem;"></i> -->
                 Ajouter
             </button>
+
+            
         </div>
         <div class="card">
             <div class="table-container">
@@ -24,7 +28,9 @@
                             <th>Date de livraison</th>
                             <th>Coût</th>
                             <th>Payer</th>
-                            <th>Reste à payer</th>
+                            <!-- <th>Reste à payer</th> -->
+                            <th>Dépense</th>
+                            <th>Revenu</th>
                             <th>Statut</th>
                             <th>Action</th>
                         </tr>
@@ -37,7 +43,9 @@
                                 <td>{{ c.date_livraison }}</td>
                                 <td>{{ c.montant }}</td>
                                 <td>{{ c.avance }}</td>
-                                <td>{{ c.reste_a_payer }}</td>
+                                <!-- <td>{{ c.reste_a_payer }}</td> -->
+                                <td>{{ c.depense }}</td>
+                                <td>{{ c.revenu }}</td>
                                 <td>
                                     {% if c.statut == 'livree' %}
                                         <span class="status-badge success">Livrée</span>
@@ -52,6 +60,15 @@
                                         <!-- <button class="action-btn btn-view" title="Voir">
                                             <i class="ri-eye-line"></i>
                                         </button> -->
+                                        <button 
+                                            class="action-btn btn-view" 
+                                            title="Dépense"
+                                            {% if c.statut == 'livree' %}disabled style="opacity:0.5; cursor:not-allowed;"
+                                            {% else %}
+                                            onclick="openModalDepense('{{ c.id }}', '{{ c.client.nom_prenom|escapejs }}')"
+                                            {% endif %}>
+                                            <i class="ri-shopping-bag-line"></i>
+                                        </button>
                                         <button class="action-btn btn-delete" 
                                             title="Supprimer"  
                                             {% if c.statut == 'livree' %}disabled style="opacity:0.5; cursor:not-allowed;"{% else %}
@@ -214,6 +231,93 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal Dépense -->
+    <div class="modal-overlay" id="modalDepense">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Ajouter une dépense</h3>
+                <button type="button" class="modal-close" onclick="closeModalDepense()">
+                    <i class="ri-close-line"></i>
+                </button>
+            </div>
+
+            <form method="post" id="formDepense" action="">
+                {% csrf_token %}
+                <div class="modal-body" style="grid-template-columns: repeat(1, 1fr);">
+                    <p id="depenseClientNom" style="margin-bottom: 1rem; font-weight: 500;"></p>
+                    <div class="form-field">
+                        <label class="form-label-modal">Montant de la dépense</label>
+                        <input 
+                            type="number" 
+                            name="montant" 
+                            id="depenseMontant"
+                            class="form-input" 
+                            min="1" 
+                            step="0.01" 
+                            required 
+                            placeholder="Ex: 500">
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn-modal btn-modal-cancel" onclick="closeModalDepense()">
+                        Annuler
+                    </button>
+                    <button type="submit" class="btn-modal btn-modal-submit">
+                        <i class="ri-check-line" style="margin-right: 0.5rem;"></i>
+                        Enregistrer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Légende -->
+    <div class="modal-overlay" id="modalLegende">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Guide des actions</h3>
+                <button type="button" class="modal-close" onclick="closeModalLegende()">
+                    <i class="ri-close-line"></i>
+                </button>
+            </div>
+
+            <div class="modal-body" style="grid-template-columns: repeat(1, 1fr); gap: 1rem;">
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <button class="action-btn btn-edit" style="pointer-events: none;">
+                        <i class="ri-shopping-bag-line"></i>
+                    </button>
+                    <span>Ajouter une dépense liée à cette commande. Les dépenses s'accumulent à chaque enregistrement.</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <button class="action-btn btn-delete" style="pointer-events: none;">
+                        <i class="ri-delete-bin-line"></i>
+                    </button>
+                    <span>Supprimer définitivement la commande.</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <button class="action-btn btn-edit" style="pointer-events: none;">
+                        <i class="ri-edit-line"></i>
+                    </button>
+                    <span>Modifier les informations de la commande (client, montant, avance, date).</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <button class="action-btn btn-end" style="pointer-events: none;">
+                        <i class="ri-check-line"></i>
+                    </button>
+                    <span>Marquer la commande comme livrée. Une fois livrée, aucune modification n'est possible.</span>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn-modal btn-modal-cancel" onclick="closeModalLegende()">
+                    Fermer
+                </button>
+            </div>
+        </div>
+    </div>
+
 
 
 {% endblock %}

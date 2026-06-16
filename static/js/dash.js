@@ -349,6 +349,17 @@ function closeModalDeleteMesureHomme() {
 
 
 
+function openModalDepense(commandeId, clientNom) {
+    document.getElementById('formDepense').action = `/orders/depense/${commandeId}/`;
+    document.getElementById('depenseClientNom').textContent = `Client : ${clientNom}`;
+    document.getElementById('depenseMontant').value = '';
+    document.getElementById('modalDepense').classList.add('active');
+}
+
+function closeModalDepense() {
+    document.getElementById('modalDepense').classList.remove('active');
+}
+
 
 // Close modal when clicking outside
 document.getElementById('modalAddClient').addEventListener('click', (e) => {
@@ -356,6 +367,14 @@ document.getElementById('modalAddClient').addEventListener('click', (e) => {
         closeModal();
     }
 });
+
+function openModalLegende() {
+    document.getElementById('modalLegende').classList.add('active');
+}
+function closeModalLegende() {
+    document.getElementById('modalLegende').classList.remove('active');
+}
+
 
 function openModal() {
     const modal = document.getElementById('modalNouvelleCommande');

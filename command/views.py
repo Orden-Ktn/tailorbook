@@ -13,7 +13,7 @@ def commande(request):
     form = CommandeForm(request.POST or None, user=user)
 
     # ✅ Commandes de l'utilisateur connecté
-    commande_qs = Commande.objects.filter(client__atelier=user).order_by('-id')
+    commande_qs = Commande.objects.filter(atelier=user).order_by('-id')
 
     # ✅ Clients de l'utilisateur connecté
     client = Client.objects.filter(atelier=user)
@@ -60,6 +60,7 @@ def ajouter_commande(request):
             if form.is_valid():
                 commande = form.save(commit=False)
                 commande.statut = 'recue'
+                commande.atelier = request.user
                 commande.save()
                 messages.success(request, "Commande enregistrée avec succès !")
                 return redirect("commande")
@@ -70,6 +71,21 @@ def ajouter_commande(request):
         form = CommandeForm(user=request.user)
 
     return render(request, "commande.html", {"form": form})
+
+
+@login_required
+def ajouter_depense(request, commande_id):
+    commande = get_object_or_404(Commande, id=commande_id)
+    if request.method == "POST":
+        montant = request.POST.get("montant")
+        try:
+            from decimal import Decimal
+            commande.depense += Decimal(montant)
+            commande.save()
+            messages.success(request, "Dépense enregistrée avec succès !")
+        except Exception:
+            messages.error(request, "Montant invalide.")
+    return redirect("commande")
 
 
 @login_required
